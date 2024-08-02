@@ -14,12 +14,12 @@ async function markChanges(store, newHashes, storeKey) {
 function githubOutput(changedApps) {
   var numChangedApps = changedApps.length;
 
-  var stringifyApps = JSON.stringify(changedApps);
+  var stringifyApps = JSON.stringify({directory: changedApps});
 
   core.info(`Changed apps: ${stringifyApps}`);
   core.info(`Number of changed apps: ${numChangedApps}`);
 
-  core.setOutput("apps", stringifyApps);
+  core.setOutput("matrix", stringifyApps);
   core.setOutput("length", numChangedApps);
 }
 
