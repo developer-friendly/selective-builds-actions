@@ -6,19 +6,12 @@ inputs:
     description: The directory to look for applications
     required: true
     default: "."
-  redis-host:
+  redis-url:
     description: The host of the redis server
-    required: false
-  redis-port:
-    description: The port of the redis server
-    required: false
-  redis-password:
+    required: true
+  redis-token:
     description: The password of the redis server
-    required: false
-  redis-ssl:
-    description: Use SSL to connect to the redis server
-    required: false
-    default: "true"
+    required: true
 outputs:
   apps:
     description: A comma list of applications that need rebuild.
