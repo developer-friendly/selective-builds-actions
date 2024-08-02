@@ -49,6 +49,7 @@ try {
 
   if (!isPost) {
     await main(store, newHashes);
+    core.saveState("isPost", true);
   } else {
     await post(store, newHashes);
   }
