@@ -51,7 +51,7 @@ function calculateAllHashes(appRootPath) {
 }
 
 async function getCurrentAppHashes(store, storeKey) {
-  return await store.hGetAll(storeKey);
+  return await store.hgetall(storeKey);
 }
 
 function compareHashes(oldHashes, newHashes) {

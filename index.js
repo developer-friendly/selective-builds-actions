@@ -18,22 +18,18 @@ function githubOutput(changedApps) {
   core.setOutput("length", numChangedApps);
 }
 
-async function main(store, appRootPath) {
+async function main(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
-  var appRootPath = process.argv[2] || ".";
 
-  var newHashes = calculateAllHashes(appRootPath);
   var changedApps = await markChanges(store, newHashes, storeKey);
 
   githubOutput(changedApps);
 }
 
-async function post(store, appRootPath) {
+async function post(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
 
-  var newHashes = calculateAllHashes(appRootPath);
-
-  await writeChangedHashes(store, newHashes, storeKey);
+  await store.hset(storeKey, newHashes);
 }
 
 try {
@@ -44,14 +40,15 @@ try {
 
   var isPost = !!core.getState("isPost");
   var appRootPath = core.getInput("path") || ".";
+  var newHashes = calculateAllHashes(appRootPath);
 
   await store.ping();
 
   if (!isPost) {
-    await main(store, appRootPath);
+    await main(store, newHashes);
     core.setState("isPost", "true");
   } else {
-    await post(store, appRootPath);
+    await post(store, newHashes);
   }
 } catch (error) {
   core.setFailed(error.message);

@@ -27665,7 +27665,7 @@ function calculateAllHashes(appRootPath) {
 }
 
 async function getCurrentAppHashes(store, storeKey) {
-  return await store.hGetAll(storeKey);
+  return await store.hgetall(storeKey);
 }
 
 function compareHashes(oldHashes, newHashes) {
@@ -27706,22 +27706,18 @@ function githubOutput(changedApps) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("length", numChangedApps);
 }
 
-async function main(store, appRootPath) {
+async function main(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
-  var appRootPath = process.argv[2] || ".";
 
-  var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
   var changedApps = await markChanges(store, newHashes, storeKey);
 
   githubOutput(changedApps);
 }
 
-async function post(store, appRootPath) {
+async function post(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
 
-  var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
-
-  await writeChangedHashes(store, newHashes, storeKey);
+  await store.hset(storeKey, newHashes);
 }
 
 try {
@@ -27732,14 +27728,15 @@ try {
 
   var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState("isPost");
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
+  var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
 
   await store.ping();
 
   if (!isPost) {
-    await main(store, appRootPath);
+    await main(store, newHashes);
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.setState("isPost", "true");
   } else {
-    await post(store, appRootPath);
+    await post(store, newHashes);
   }
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.message);
