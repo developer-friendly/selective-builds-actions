@@ -14,6 +14,9 @@ async function markChanges(store, newHashes, storeKey) {
 function githubOutput(changedApps) {
   var numChangedApps = changedApps.length;
 
+  core.info(`Changed apps: ${changedApps.join(", ")}`);
+  core.info(`Number of changed apps: ${numChangedApps}`);
+
   core.setOutput("apps", changedApps);
   core.setOutput("length", numChangedApps);
 }
