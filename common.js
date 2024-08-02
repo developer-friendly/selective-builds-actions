@@ -1,25 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { createHash } from 'crypto';
-import redis from 'redis';
 import * as core from "@actions/core";
-
-var REDIS_HOST = core.getInput("redis-host") || process.env.REDIS_HOST;
-var REDIS_PORT = parseInt(
-  core.getInput("redis-port") || process.env.REDIS_PORT || "6379",
-);
-var REDIS_PASSWORD =
-  core.getInput("redis-password") || process.env.REDIS_PASSWORD;
-var REDIS_SSL = core.getInput("redis-ssl") || process.env.REDIS_SSL == "true";
-
-var redisClient = redis.createClient({
-  password: REDIS_PASSWORD,
-  socket: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    tls: REDIS_SSL,
-  },
-});
 
 function* findFiles(directory) {
   var items = fs.readdirSync(directory);
@@ -87,5 +69,4 @@ export {
   calculateAllHashes,
   getCurrentAppHashes,
   compareHashes,
-  redisClient,
 };

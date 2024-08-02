@@ -45146,7 +45146,6 @@ module.exports = parseParams
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "Cy": () => (/* binding */ redisClient),
 /* harmony export */   "Wi": () => (/* binding */ getCurrentAppHashes),
 /* harmony export */   "p7": () => (/* binding */ compareHashes),
 /* harmony export */   "vI": () => (/* binding */ calculateAllHashes)
@@ -45155,30 +45154,11 @@ module.exports = parseParams
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(57147);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(71017);
 /* harmony import */ var crypto__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6113);
-/* harmony import */ var redis__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(65192);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(42186);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(42186);
 
 
 
 
-
-
-var REDIS_HOST = _actions_core__WEBPACK_IMPORTED_MODULE_4__.getInput("redis-host") || process.env.REDIS_HOST;
-var REDIS_PORT = parseInt(
-  _actions_core__WEBPACK_IMPORTED_MODULE_4__.getInput("redis-port") || process.env.REDIS_PORT || "6379",
-);
-var REDIS_PASSWORD =
-  _actions_core__WEBPACK_IMPORTED_MODULE_4__.getInput("redis-password") || process.env.REDIS_PASSWORD;
-var REDIS_SSL = _actions_core__WEBPACK_IMPORTED_MODULE_4__.getInput("redis-ssl") || process.env.REDIS_SSL == "true";
-
-var redisClient = redis__WEBPACK_IMPORTED_MODULE_3__.createClient({
-  password: REDIS_PASSWORD,
-  socket: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    tls: REDIS_SSL,
-  },
-});
 
 function* findFiles(directory) {
   var items = fs__WEBPACK_IMPORTED_MODULE_0__.readdirSync(directory);
@@ -45252,6 +45232,8 @@ function compareHashes(oldHashes, newHashes) {
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony import */ var _common_js__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(12368);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(42186);
+/* harmony import */ var redis__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(65192);
+
 
 
 
@@ -45286,8 +45268,25 @@ async function post(store, appRootPath) {
 }
 
 try {
+  var REDIS_HOST = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-host") || process.env.REDIS_HOST;
+  var REDIS_PORT = parseInt(
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-port") || process.env.REDIS_PORT || "6379"
+  );
+  var REDIS_PASSWORD =
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-password") || process.env.REDIS_PASSWORD;
+  var REDIS_SSL = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-ssl") || process.env.REDIS_SSL == "true";
+
+  var redisClient = redis__WEBPACK_IMPORTED_MODULE_2__.createClient({
+    password: REDIS_PASSWORD,
+    socket: {
+      host: REDIS_HOST,
+      port: REDIS_PORT,
+      tls: REDIS_SSL,
+    },
+  });
+
   var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState("isPost");
-  var store = await _common_js__WEBPACK_IMPORTED_MODULE_0__/* .redisClient.connect */ .Cy.connect();
+  var store = await redisClient.connect();
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
 
   await store.ping();
