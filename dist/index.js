@@ -27725,13 +27725,10 @@ async function post(store, appRootPath) {
 }
 
 try {
-  var REDIS_HOST = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-host");
-  var REDIS_PASSWORD = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-password");
+  var url = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-url");
+  var token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-token");
 
-  var redisClient = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({
-    url: `https://${REDIS_HOST}`,
-    token: REDIS_PASSWORD,
-  });
+  var redisClient = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
 
   var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState("isPost");
   var store = await redisClient.connect();
