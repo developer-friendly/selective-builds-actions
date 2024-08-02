@@ -27728,10 +27728,9 @@ try {
   var url = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-url");
   var token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-token");
 
-  var redisClient = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
+  var store = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
 
   var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState("isPost");
-  var store = await redisClient.connect();
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
 
   await store.ping();

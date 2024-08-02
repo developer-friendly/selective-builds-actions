@@ -40,10 +40,9 @@ try {
   var url = core.getInput("redis-url");
   var token = core.getInput("redis-token");
 
-  var redisClient = new Redis({ url, token });
+  var store = new Redis({ url, token });
 
   var isPost = !!core.getState("isPost");
-  var store = await redisClient.connect();
   var appRootPath = core.getInput("path") || ".";
 
   await store.ping();
