@@ -27734,7 +27734,6 @@ try {
 
   if (!isPost) {
     await main(store, newHashes);
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setState("isPost", "true");
   } else {
     await post(store, newHashes);
   }
