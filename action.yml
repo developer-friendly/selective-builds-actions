@@ -16,7 +16,7 @@ outputs:
   apps:
     description: A comma list of applications that need rebuild.
 runs:
-  using: "node20"
+  using: node20
   main: dist/index.js
   post: dist/index.js
   post-if: success()
