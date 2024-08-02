@@ -27725,9 +27725,8 @@ async function post(store, appRootPath) {
 }
 
 try {
-  var REDIS_HOST = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-host") || process.env.REDIS_HOST;
-  var REDIS_PASSWORD =
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-password") || process.env.REDIS_PASSWORD;
+  var REDIS_HOST = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-host");
+  var REDIS_PASSWORD = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-password");
 
   var redisClient = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({
     url: `https://${REDIS_HOST}`,

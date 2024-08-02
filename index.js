@@ -37,9 +37,8 @@ async function post(store, appRootPath) {
 }
 
 try {
-  var REDIS_HOST = core.getInput("redis-host") || process.env.REDIS_HOST;
-  var REDIS_PASSWORD =
-    core.getInput("redis-password") || process.env.REDIS_PASSWORD;
+  var REDIS_HOST = core.getInput("redis-host");
+  var REDIS_PASSWORD = core.getInput("redis-password");
 
   var redisClient = new Redis({
     url: `https://${REDIS_HOST}`,
