@@ -1,8 +1,8 @@
-var fs = require("fs");
-var redis = require("redis");
-var { createHash } = require("crypto");
-var path = require("path");
-var core = require("@actions/core");
+import fs from 'fs';
+import path from 'path';
+import { createHash } from 'crypto';
+import redis from 'redis';
+import * as core from "@actions/core";
 
 var REDIS_HOST = core.getInput("redis-host") || process.env.REDIS_HOST;
 var REDIS_PORT = parseInt(
