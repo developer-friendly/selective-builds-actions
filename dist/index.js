@@ -45267,8 +45267,7 @@ function githubOutput(changedApps) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("length", numChangedApps);
 }
 
-async function main() {
-  var store = await _common_js__WEBPACK_IMPORTED_MODULE_0__/* .redisClient.connect */ .Cy.connect();
+async function main(store, appRootPath) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
   var appRootPath = process.argv[2] || ".";
 
@@ -45278,10 +45277,8 @@ async function main() {
   githubOutput(changedApps);
 }
 
-async function post() {
-  var store = await _common_js__WEBPACK_IMPORTED_MODULE_0__/* .redisClient.connect */ .Cy.connect();
+async function post(store, appRootPath) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
-  var appRootPath = process.argv[2] || ".";
 
   var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
 
@@ -45289,12 +45286,17 @@ async function post() {
 }
 
 try {
-  var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState('isPost');
+  var isPost = !!_actions_core__WEBPACK_IMPORTED_MODULE_1__.getState("isPost");
+  var store = await _common_js__WEBPACK_IMPORTED_MODULE_0__/* .redisClient.connect */ .Cy.connect();
+  var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
+
+  await store.ping();
+
   if (!isPost) {
-    await main();
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setState('isPost', 'true');
+    await main(store, appRootPath);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setState("isPost", "true");
   } else {
-    await post();
+    await post(store, appRootPath);
   }
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.message);

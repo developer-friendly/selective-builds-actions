@@ -18,8 +18,7 @@ function githubOutput(changedApps) {
   core.setOutput("length", numChangedApps);
 }
 
-async function main() {
-  var store = await redisClient.connect();
+async function main(store, appRootPath) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
   var appRootPath = process.argv[2] || ".";
 
@@ -29,10 +28,8 @@ async function main() {
   githubOutput(changedApps);
 }
 
-async function post() {
-  var store = await redisClient.connect();
+async function post(store, appRootPath) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
-  var appRootPath = process.argv[2] || ".";
 
   var newHashes = calculateAllHashes(appRootPath);
 
@@ -40,12 +37,17 @@ async function post() {
 }
 
 try {
-  var isPost = !!core.getState('isPost');
+  var isPost = !!core.getState("isPost");
+  var store = await redisClient.connect();
+  var appRootPath = core.getInput("path") || ".";
+
+  await store.ping();
+
   if (!isPost) {
-    await main();
-    core.setState('isPost', 'true');
+    await main(store, appRootPath);
+    core.setState("isPost", "true");
   } else {
-    await post();
+    await post(store, appRootPath);
   }
 } catch (error) {
   core.setFailed(error.message);
