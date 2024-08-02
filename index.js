@@ -17,7 +17,7 @@ function githubOutput(changedApps) {
   core.info(`Changed apps: ${changedApps.join(", ")}`);
   core.info(`Number of changed apps: ${numChangedApps}`);
 
-  core.setOutput("apps", changedApps);
+  core.setOutput("apps", JSON.stringify(changedApps));
   core.setOutput("length", numChangedApps);
 }
 

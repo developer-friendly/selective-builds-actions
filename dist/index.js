@@ -27705,7 +27705,7 @@ function githubOutput(changedApps) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Changed apps: ${changedApps.join(", ")}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Number of changed apps: ${numChangedApps}`);
 
-  _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("apps", changedApps);
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("apps", JSON.stringify(changedApps));
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("length", numChangedApps);
 }
 
