@@ -82,7 +82,7 @@ function compareHashes(oldHashes, newHashes) {
   return changedApps;
 }
 
-module.exports = {
+export {
   calculateDirectoryHash,
   calculateAllHashes,
   getCurrentAppHashes,

@@ -23,14 +23,15 @@
     "url": "git+https://github.com/developer-friendly/selective-build-actions.git"
   },
   "scripts": {
-    "mark": "bun main.js",
-    "lint": "prettier --write ."
+    "lint": "prettier --write .",
+    "build": "ncc build --minify"
   },
   "type": "module",
   "version": "1.0.0",
   "devDependencies": {
-    "prettier": "^3.3.3",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@vercel/ncc": "^0.38.1",
+    "prettier": "^3.3.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
