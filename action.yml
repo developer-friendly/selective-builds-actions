@@ -1,0 +1,29 @@
+name: Selective Builds
+description: Calculate the changed services comparing the contents of files to the previous run.
+author: Meysam Azad
+inputs:
+  path:
+    description: The directory to look for applications
+    required: true
+    default: "."
+  redis-host:
+    description: The host of the redis server (defaults to $REDIS_HOST)
+    required: false
+  redis-port:
+    description: The port of the redis server (defaults to $REDIS_PORT)
+    required: false
+  redis-password:
+    description: The password of the redis server (defaults to $REDIS_PASSWORD)
+    required: false
+  redis-ssl:
+    description: Use SSL to connect to the redis server (defaults to $REDIS_SSL)
+    required: false
+    default: "true"
+outputs:
+  apps:
+    description: A comma list of applications that need rebuild.
+runs:
+  using: "node20"
+  main: "main.js"
+  post: "post.js"
+  post-if: success

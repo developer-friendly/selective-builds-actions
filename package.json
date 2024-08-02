@@ -1,0 +1,38 @@
+{
+  "author": "Meysam Azad <meysam@developer-friendly.blog>",
+  "bugs": {
+    "url": "https://github.com/developer-friendly/selective-build-actions/issues"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "redis": "^4.7.0"
+  },
+  "description": "Find the changed services since the last build",
+  "homepage": "https://github.com/developer-friendly/selective-build-actions#readme",
+  "keywords": [
+    "github actions",
+    "monorepo",
+    "docker"
+  ],
+  "license": "Apache-2.0",
+  "main": "main.js",
+  "name": "selective-builds-actions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developer-friendly/selective-build-actions.git"
+  },
+  "scripts": {
+    "mark": "bun main.js",
+    "lint": "prettier --write ."
+  },
+  "type": "module",
+  "version": "1.0.0",
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
