@@ -24,7 +24,7 @@
   },
   "scripts": {
     "lint": "prettier --write .",
-    "build": "ncc build --minify"
+    "build": "ncc build"
   },
   "type": "module",
   "version": "1.0.0",
