@@ -26,4 +26,4 @@ runs:
   using: "node20"
   main: "main.js"
   post: "post.js"
-  post-if: success
+  post-if: success()
