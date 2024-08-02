@@ -4,7 +4,7 @@ import {
   compareHashes,
 } from "./common.js";
 import core from "@actions/core";
-import redis from "redis";
+import { Redis } from "@upstash/redis";
 
 async function markChanges(store, newHashes, storeKey) {
   var oldHashes = await getCurrentAppHashes(store, storeKey);
@@ -38,20 +38,12 @@ async function post(store, appRootPath) {
 
 try {
   var REDIS_HOST = core.getInput("redis-host") || process.env.REDIS_HOST;
-  var REDIS_PORT = parseInt(
-    core.getInput("redis-port") || process.env.REDIS_PORT || "6379"
-  );
   var REDIS_PASSWORD =
     core.getInput("redis-password") || process.env.REDIS_PASSWORD;
-  var REDIS_SSL = core.getInput("redis-ssl") || process.env.REDIS_SSL == "true";
 
-  var redisClient = redis.createClient({
-    password: REDIS_PASSWORD,
-    socket: {
-      host: REDIS_HOST,
-      port: REDIS_PORT,
-      tls: REDIS_SSL,
-    },
+  var redisClient = new Redis({
+    url: `https://${REDIS_HOST}`,
+    token: REDIS_PASSWORD,
   });
 
   var isPost = !!core.getState("isPost");
