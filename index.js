@@ -1,10 +1,73 @@
-import {
-  calculateAllHashes,
-  getCurrentAppHashes,
-  compareHashes,
-} from "./common.js";
+import fs from "fs";
+import path from "path";
+import { createHash } from "crypto";
 import core from "@actions/core";
-import { Redis } from "@upstash/redis";
+import { createClient } from "redis";
+
+function* findFiles(directory) {
+  var items = fs.readdirSync(directory);
+
+  for (var item of items) {
+    var fullPath = path.join(directory, item);
+    if (fs.statSync(fullPath).isDirectory()) {
+      yield* findFiles(fullPath);
+    } else {
+      yield fullPath;
+    }
+  }
+}
+function calculateFileHash(filePath) {
+  var fileBuffer = fs.readFileSync(filePath);
+  var hashSum = createHash("sha256");
+  hashSum.update(fileBuffer);
+  return hashSum.digest("hex");
+}
+
+function calculateDirectoryHash(directory) {
+  var hashSum = createHash("sha256");
+
+  for (var file of findFiles(directory)) {
+    var fileHash = calculateFileHash(file);
+    hashSum.update(fileHash);
+  }
+
+  return hashSum.digest("hex");
+}
+
+function calculateAllHashes(appRootPath) {
+  var applications = fs.readdirSync(appRootPath).filter(function isDir(file) {
+    return fs.statSync(`${appRootPath}/${file}`).isDirectory();
+  });
+
+  var directoryHashes = {};
+
+  applications.forEach(function hashDir(appDir) {
+    var rootPath = appRootPath.replace(/\/$/, "");
+    directoryHashes[`${rootPath}/${appDir}`] = calculateDirectoryHash(
+      `${rootPath}/${appDir}`
+    );
+  });
+
+  return directoryHashes;
+}
+
+async function getCurrentAppHashes(store, storeKey) {
+  return await store.hGetAll(storeKey);
+}
+
+function compareHashes(oldHashes, newHashes) {
+  if (!oldHashes) {
+    return Object.keys(newHashes);
+  }
+
+  var changedApps = [];
+  for (var app in newHashes) {
+    if (!oldHashes[app] || oldHashes[app] != newHashes[app]) {
+      changedApps.push(app);
+    }
+  }
+  return changedApps;
+}
 
 async function markChanges(store, newHashes, storeKey) {
   var oldHashes = await getCurrentAppHashes(store, storeKey);
@@ -30,14 +93,16 @@ async function mark(store, newHashes, storeKey) {
 }
 
 async function submit(store, newHashes, storeKey) {
-  await store.hset(storeKey, newHashes);
+  await store.hSet(storeKey, newHashes);
 }
 
 try {
-  var url = core.getInput("redis-url");
-  var token = core.getInput("redis-token");
+  var host = core.getInput("redis-host");
+  var port = core.getInput("redis-port");
+  var password = core.getInput("redis-password");
+  var tls = core.getBooleanInput("redis-ssl");
   var mode = core.getInput("mode");
-  var appRootPath = core.getInput("path") || ".";
+  var appRootPath = core.getInput("path");
   var exclusions = core.getMultilineInput("exclusions").filter(Boolean);
   var storeKey = core.getInput("store-key");
 
@@ -46,7 +111,16 @@ try {
   core.info(`Exclusions: ${exclusions}`);
   core.info(`Store key: ${storeKey}`);
 
-  var store = new Redis({ url, token });
+  var store = createClient({
+    username: "default",
+    password,
+    socket: {
+      host,
+      port,
+      tls,
+    },
+  });
+  await store.connect();
   var ping = await store.ping();
 
   core.info(`Redis ping: ${ping}`);

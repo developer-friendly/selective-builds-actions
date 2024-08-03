@@ -6,12 +6,20 @@ inputs:
     description: The directory to look for applications
     required: true
     default: "."
-  redis-url:
+  redis-host:
     description: The host of the redis server
     required: true
-  redis-token:
+  redis-port:
+    description: The port of the redis server
+    required: false
+    default: "6379"
+  redis-password:
     description: The password of the redis server
     required: true
+  redis-ssl:
+    description: Whether to use SSL for the redis connection
+    required: false
+    default: "false"
   mode:
     description: Whether to capture the changes or to submit them to datastore (mark|submit)
     required: false
