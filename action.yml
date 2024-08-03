@@ -12,11 +12,17 @@ inputs:
   redis-token:
     description: The password of the redis server
     required: true
+  mode:
+    description: Whether to capture the changes or to submit them to datastore (mark|submit)
+    required: false
+    default: "mark"
+  exclusions:
+    description: A line separated list of patterns to exclude when finding apps
+    required: false
+    default: ""
 outputs:
   apps:
     description: A comma list of applications that need rebuild.
 runs:
   using: node20
   main: dist/index.js
-  post: dist/index.js
-  post-if: success()

@@ -14,7 +14,7 @@ async function markChanges(store, newHashes, storeKey) {
 function githubOutput(changedApps) {
   var numChangedApps = changedApps.length;
 
-  var stringifyApps = JSON.stringify({directory: changedApps});
+  var stringifyApps = JSON.stringify({ directory: changedApps });
 
   core.info(`Changed apps: ${stringifyApps}`);
   core.info(`Number of changed apps: ${numChangedApps}`);
@@ -23,7 +23,7 @@ function githubOutput(changedApps) {
   core.setOutput("length", numChangedApps);
 }
 
-async function main(store, newHashes) {
+async function mark(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
 
   var changedApps = await markChanges(store, newHashes, storeKey);
@@ -31,7 +31,7 @@ async function main(store, newHashes) {
   githubOutput(changedApps);
 }
 
-async function post(store, newHashes) {
+async function submit(store, newHashes) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
 
   await store.hset(storeKey, newHashes);
@@ -40,20 +40,26 @@ async function post(store, newHashes) {
 try {
   var url = core.getInput("redis-url");
   var token = core.getInput("redis-token");
+  var mode = core.getInput("mode");
+  var exclusions = core.getMultilineInput("exclusions");
 
   var store = new Redis({ url, token });
 
-  var isPost = !!core.getState("isPost");
   var appRootPath = core.getInput("path") || ".";
   var newHashes = calculateAllHashes(appRootPath);
 
+  newHashes = newHashes.filter(function filterOutExclusions(hash) {
+    return !exclusions.some(function isExcluded(exclusion) {
+      return hash.includes(exclusion);
+    });
+  });
+
   await store.ping();
 
-  if (!isPost) {
-    await main(store, newHashes);
-    core.saveState("isPost", true);
-  } else {
-    await post(store, newHashes);
+  if (mode == "mark") {
+    await mark(store, newHashes);
+  } else if (mode == "submit") {
+    await submit(store, newHashes);
   }
 } catch (error) {
   core.setFailed(error.message);

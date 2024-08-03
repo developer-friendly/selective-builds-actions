@@ -32,8 +32,5 @@
     "@types/bun": "latest",
     "@vercel/ncc": "^0.38.1",
     "prettier": "^3.3.3"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
   }
 }

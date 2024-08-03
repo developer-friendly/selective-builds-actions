@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { createHash } from 'crypto';
+import fs from "fs";
+import path from "path";
+import { createHash } from "crypto";
 import * as core from "@actions/core";
 
 function* findFiles(directory) {
