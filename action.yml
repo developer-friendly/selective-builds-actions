@@ -1,6 +1,9 @@
 name: Selective Builds
 description: Calculate the changed services comparing the contents of files to the previous run.
 author: Meysam Azad
+branding:
+  icon: sliders
+  color: orange
 inputs:
   path:
     description: The directory to look for applications
