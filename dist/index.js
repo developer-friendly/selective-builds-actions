@@ -45300,6 +45300,8 @@ try {
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.setFailed(error.message);
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.setFailed(error.stack);
+} finally {
+  await store.quit();
 }
 
 __webpack_async_result__();
