@@ -48,11 +48,13 @@ try {
   var appRootPath = core.getInput("path") || ".";
   var newHashes = calculateAllHashes(appRootPath);
 
-  newHashes = newHashes.filter(function filterOutExclusions(hash) {
-    return !exclusions.some(function isExcluded(exclusion) {
-      return hash.includes(exclusion);
-    });
-  });
+  newHashes = Object.fromEntries(
+    Object.entries(newHashes).filter(function getInclusions([key]) {
+      return !exclusions.some(function isExcluded(exclusion) {
+        return key.includes(exclusion);
+      });
+    })
+  );
 
   await store.ping();
 

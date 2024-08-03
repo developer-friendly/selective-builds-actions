@@ -552,8 +552,8 @@ class OidcClient {
             const res = yield httpclient
                 .getJson(id_token_url)
                 .catch(error => {
-                throw new Error(`Failed to get ID Token. \n
-        Error Code : ${error.statusCode}\n
+                throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
         Error Message: ${error.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
@@ -27736,11 +27736,13 @@ try {
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
   var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
 
-  newHashes = newHashes.filter(function filterOutExclusions(hash) {
-    return !exclusions.some(function isExcluded(exclusion) {
-      return hash.includes(exclusion);
-    });
-  });
+  newHashes = Object.fromEntries(
+    Object.entries(newHashes).filter(function getInclusions([key]) {
+      return !exclusions.some(function isExcluded(exclusion) {
+        return key.includes(exclusion);
+      });
+    })
+  );
 
   await store.ping();
 
@@ -27786,7 +27788,7 @@ typeof atob>"u"&&(global.atob=o=>Buffer.from(o,"base64").toString("utf8"));var a
 /************************************************************************/
 /******/ // The module cache
 /******/ var __webpack_module_cache__ = {};
-/******/
+/******/ 
 /******/ // The require function
 /******/ function __nccwpck_require__(moduleId) {
 /******/ 	// Check if module is in cache
@@ -27800,7 +27802,7 @@ typeof atob>"u"&&(global.atob=o=>Buffer.from(o,"base64").toString("utf8"));var a
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
 /******/ 	};
-/******/
+/******/ 
 /******/ 	// Execute the module function
 /******/ 	var threw = true;
 /******/ 	try {
@@ -27809,11 +27811,11 @@ typeof atob>"u"&&(global.atob=o=>Buffer.from(o,"base64").toString("utf8"));var a
 /******/ 	} finally {
 /******/ 		if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 	}
-/******/
+/******/ 
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
 /******/ }
-/******/
+/******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/async module */
 /******/ (() => {
@@ -27883,7 +27885,7 @@ typeof atob>"u"&&(global.atob=o=>Buffer.from(o,"base64").toString("utf8"));var a
 /******/ 		queue && (queue.d = 0);
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/define property getters */
 /******/ (() => {
 /******/ 	// define getter functions for harmony exports
@@ -27895,21 +27897,21 @@ typeof atob>"u"&&(global.atob=o=>Buffer.from(o,"base64").toString("utf8"));var a
 /******/ 		}
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
 /******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/compat */
-/******/
+/******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
-/******/
+/******/ 
 /************************************************************************/
-/******/
+/******/ 
 /******/ // startup
 /******/ // Load entry module and return exports
 /******/ // This entry module used 'module' so it can't be inlined
 /******/ var __webpack_exports__ = __nccwpck_require__(1378);
 /******/ __webpack_exports__ = await __webpack_exports__;
-/******/
+/******/ 
