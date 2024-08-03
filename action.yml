@@ -20,6 +20,10 @@ inputs:
     description: A line separated list of patterns to exclude when finding apps
     required: false
     default: ""
+  store-key:
+    description: The key to store the changes in the redis server
+    required: false
+    default: app-caches
 outputs:
   apps:
     description: A comma list of applications that need rebuild.

@@ -27711,15 +27711,13 @@ function githubOutput(changedApps) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setOutput("length", numChangedApps);
 }
 
-async function mark(store, newHashes) {
-  var storeKey = process.env.STORE_KEY || "app_hashes";
-
+async function mark(store, newHashes, storeKey) {
   var changedApps = await markChanges(store, newHashes, storeKey);
 
   githubOutput(changedApps);
 }
 
-async function submit(store, newHashes) {
+async function submit(store, newHashes, storeKey) {
   var storeKey = process.env.STORE_KEY || "app_hashes";
 
   await store.hset(storeKey, newHashes);
@@ -27731,10 +27729,12 @@ try {
   var mode = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("mode");
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
   var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getMultilineInput("exclusions").filter(Boolean);
+  var storeKey = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("store-key");
 
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Mode: ${mode}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`App root path: ${appRootPath}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Exclusions: ${exclusions}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Store key: ${storeKey}`);
 
   var store = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
   var ping = await store.ping();
@@ -27756,12 +27756,13 @@ try {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
 
   if (mode == "mark") {
-    await mark(store, newHashes);
+    await mark(store, newHashes, storeKey);
   } else if (mode == "submit") {
-    await submit(store, newHashes);
+    await submit(store, newHashes, storeKey);
   }
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.message);
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.stack);
 }
 
 __webpack_async_result__();
