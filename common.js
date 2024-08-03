@@ -55,9 +55,13 @@ async function getCurrentAppHashes(store, storeKey) {
 }
 
 function compareHashes(oldHashes, newHashes) {
+  if (!oldHashes) {
+    return Object.keys(newHashes);
+  }
+
   var changedApps = [];
   for (var app in newHashes) {
-    if (!oldHashes || !oldHashes[app] || oldHashes[app] != newHashes[app]) {
+    if (!oldHashes[app] || oldHashes[app] != newHashes[app]) {
       changedApps.push(app);
     }
   }
