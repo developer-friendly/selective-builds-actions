@@ -27722,8 +27722,6 @@ async function mark(store, newHashes, storeKey) {
 }
 
 async function submit(store, newHashes, storeKey) {
-  var storeKey = process.env.STORE_KEY || "app_hashes";
-
   await store.hset(storeKey, newHashes);
 }
 
