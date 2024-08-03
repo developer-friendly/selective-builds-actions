@@ -27729,7 +27729,7 @@ try {
   var url = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-url");
   var token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-token");
   var mode = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("mode");
-  var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getMultilineInput("exclusions");
+  var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getMultilineInput("exclusions").filter(Boolean);
 
   var store = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
 

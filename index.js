@@ -41,7 +41,7 @@ try {
   var url = core.getInput("redis-url");
   var token = core.getInput("redis-token");
   var mode = core.getInput("mode");
-  var exclusions = core.getMultilineInput("exclusions");
+  var exclusions = core.getMultilineInput("exclusions").filter(Boolean);
 
   var store = new Redis({ url, token });
 
