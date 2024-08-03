@@ -45256,7 +45256,7 @@ try {
   var tls = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getBooleanInput("redis-ssl");
   var mode = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("mode");
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("path");
-  var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getMultilineInput("exclusions").filter(Boolean);
+  var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getMultilineInput("exclusions");
   var storeKey = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("store-key");
 
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`Mode: ${mode}`);

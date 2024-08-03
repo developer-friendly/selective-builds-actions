@@ -103,7 +103,7 @@ try {
   var tls = core.getBooleanInput("redis-ssl");
   var mode = core.getInput("mode");
   var appRootPath = core.getInput("path");
-  var exclusions = core.getMultilineInput("exclusions").filter(Boolean);
+  var exclusions = core.getMultilineInput("exclusions");
   var storeKey = core.getInput("store-key");
 
   core.info(`Mode: ${mode}`);
