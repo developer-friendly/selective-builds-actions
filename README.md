@@ -12,6 +12,10 @@ This action will perform a hash function on the first depth of directories
 specified at `path`, calculate a unique SHA256 hash on the files inside, and
 generate a unique string for each directory.
 
+It then uses that string to compare future CI runs against he one computed
+before, signaling a change in the target directory, possibly allowing a further
+job to execute a build of the application in the change directory.
+
 It is useful for selective builds on monorepos when it is desired and costly
 justified to build only the directories that have changed.
 
@@ -19,8 +23,9 @@ It does not hold any opinions on how you build your apps; you are free to pick
 whatever's best for your stack. However, for the purpose of demonstration, you
 will find a Docker build example below.
 
-This action relies on GitHub Action's dynamic matrix, a topic that has been
-covered in
+This action relies on GitHub Action's dynamic
+[matrix](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/using-a-matrix-for-your-jobs),
+a topic that has been covered in
 [here](https://developer-friendly.blog/2024/03/09/github-actions-dynamic-matrix/).
 
 ## Example - Build Docker
@@ -32,6 +37,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   prepare:
@@ -46,10 +53,12 @@ jobs:
         name: Checkout
       - id: matrix
         name: Discover changed services
-        uses: developer-friendly/selective-builds-actions@main
+        uses: developer-friendly/selective-builds-actions@v1
         with:
-          redis-url: ${{ secrets.REDIS_URL }}
-          redis-token: ${{ secrets.REDIS_TOKEN }}
+          redis-host: ${{ secrets.REDIS_HOST }}
+          redis-port: ${{ secrets.REDIS_PORT }}
+          redis-password: ${{ secrets.REDIS_PASSWORD }}
+          redis-ssl: ${{ secrets.REDIS_SSL }}
           exclusions: |
             .git
             .github
@@ -110,10 +119,12 @@ jobs:
         name: Checkout
       - id: matrix
         name: Discover changed services
-        uses: developer-friendly/selective-builds-actions@main
+        uses: developer-friendly/selective-builds-actions@v1
         with:
-          redis-url: ${{ secrets.REDIS_URL }}
-          redis-token: ${{ secrets.REDIS_TOKEN }}
+          redis-host: ${{ secrets.REDIS_HOST }}
+          redis-port: ${{ secrets.REDIS_PORT }}
+          redis-password: ${{ secrets.REDIS_PASSWORD }}
+          redis-ssl: ${{ secrets.REDIS_SSL }}
           mode: submit
           exclusions: |
             .git
