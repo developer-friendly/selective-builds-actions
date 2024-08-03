@@ -41,12 +41,21 @@ try {
   var url = core.getInput("redis-url");
   var token = core.getInput("redis-token");
   var mode = core.getInput("mode");
+  var appRootPath = core.getInput("path") || ".";
   var exclusions = core.getMultilineInput("exclusions").filter(Boolean);
 
-  var store = new Redis({ url, token });
+  core.info(`Mode: ${mode}`);
+  core.info(`App root path: ${appRootPath}`);
+  core.info(`Exclusions: ${exclusions}`);
 
-  var appRootPath = core.getInput("path") || ".";
+  var store = new Redis({ url, token });
+  var ping = await store.ping();
+
+  core.info(`Redis ping: ${ping}`);
+
   var newHashes = calculateAllHashes(appRootPath);
+
+  core.info(`New hashes: ${JSON.stringify(newHashes)}`);
 
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
@@ -56,7 +65,7 @@ try {
     })
   );
 
-  await store.ping();
+  core.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
 
   if (mode == "mark") {
     await mark(store, newHashes);

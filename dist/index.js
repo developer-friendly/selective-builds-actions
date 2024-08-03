@@ -27729,12 +27729,21 @@ try {
   var url = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-url");
   var token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("redis-token");
   var mode = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("mode");
+  var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
   var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getMultilineInput("exclusions").filter(Boolean);
 
-  var store = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Mode: ${mode}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`App root path: ${appRootPath}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Exclusions: ${exclusions}`);
 
-  var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("path") || ".";
+  var store = new _upstash_redis__WEBPACK_IMPORTED_MODULE_2__/* .Redis */ .s({ url, token });
+  var ping = await store.ping();
+
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Redis ping: ${ping}`);
+
   var newHashes = (0,_common_js__WEBPACK_IMPORTED_MODULE_0__/* .calculateAllHashes */ .vI)(appRootPath);
+
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`New hashes: ${JSON.stringify(newHashes)}`);
 
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
@@ -27744,7 +27753,7 @@ try {
     })
   );
 
-  await store.ping();
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
 
   if (mode == "mark") {
     await mark(store, newHashes);
