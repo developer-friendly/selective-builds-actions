@@ -44,7 +44,7 @@ function calculateAllHashes(appRootPath) {
   applications.forEach(function hashDir(appDir) {
     var rootPath = appRootPath.replace(/\/$/, "");
     directoryHashes[`${rootPath}/${appDir}`] = calculateDirectoryHash(
-      `${rootPath}/${appDir}`
+      `${rootPath}/${appDir}`,
     );
   });
 
@@ -132,9 +132,9 @@ try {
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
       return !exclusions.some(function isExcluded(exclusion) {
-        return key.includes(exclusion);
+        return key == exclusion;
       });
-    })
+    }),
   );
 
   core.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
