@@ -45285,7 +45285,7 @@ try {
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
       return !exclusions.some(function isExcluded(exclusion) {
-        return key == exclusion;
+        return key.endsWith(exclusion);
       });
     }),
   );
