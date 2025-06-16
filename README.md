@@ -62,6 +62,10 @@ jobs:
           exclusions: |
             .git
             .github
+          inclusions: |
+            frontend
+            backend
+            api
 
   build:
     needs: prepare
@@ -129,4 +133,8 @@ jobs:
           exclusions: |
             .git
             .github
+          inclusions: |
+            frontend
+            backend
+            api
 ```

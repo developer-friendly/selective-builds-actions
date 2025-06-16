@@ -104,11 +104,13 @@ try {
   var mode = core.getInput("mode");
   var appRootPath = core.getInput("path");
   var exclusions = core.getMultilineInput("exclusions");
+  var inclusions = core.getMultilineInput("inclusions");
   var storeKey = core.getInput("store-key");
 
   core.info(`Mode: ${mode}`);
   core.info(`App root path: ${appRootPath}`);
   core.info(`Exclusions: ${exclusions}`);
+  core.info(`Inclusions: ${inclusions}`);
   core.info(`Store key: ${storeKey}`);
 
   var store = createClient({
@@ -131,13 +133,19 @@ try {
 
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
-      return !exclusions.some(function isExcluded(exclusion) {
+      var isNotExcluded = !exclusions.some(function isExcluded(exclusion) {
         return key.endsWith(exclusion);
       });
+
+      var isIncluded = inclusions.length === 0 || inclusions.some(function isIncluded(inclusion) {
+        return key.endsWith(inclusion);
+      });
+
+      return isNotExcluded && isIncluded;
     }),
   );
 
-  core.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
+  core.info(`New hashes after exclusions and inclusions: ${JSON.stringify(newHashes)}`);
 
   if (mode == "mark") {
     await mark(store, newHashes, storeKey);

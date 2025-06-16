@@ -45257,11 +45257,13 @@ try {
   var mode = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("mode");
   var appRootPath = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("path");
   var exclusions = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getMultilineInput("exclusions");
+  var inclusions = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getMultilineInput("inclusions");
   var storeKey = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("store-key");
 
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`Mode: ${mode}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`App root path: ${appRootPath}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`Exclusions: ${exclusions}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`Inclusions: ${inclusions}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`Store key: ${storeKey}`);
 
   var store = (0,redis__WEBPACK_IMPORTED_MODULE_4__.createClient)({
@@ -45284,13 +45286,19 @@ try {
 
   newHashes = Object.fromEntries(
     Object.entries(newHashes).filter(function getInclusions([key]) {
-      return !exclusions.some(function isExcluded(exclusion) {
+      var isNotExcluded = !exclusions.some(function isExcluded(exclusion) {
         return key.endsWith(exclusion);
       });
+
+      var isIncluded = inclusions.length === 0 || inclusions.some(function isIncluded(inclusion) {
+        return key.endsWith(inclusion);
+      });
+
+      return isNotExcluded && isIncluded;
     }),
   );
 
-  _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`New hashes after exclusions: ${JSON.stringify(newHashes)}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`New hashes after exclusions and inclusions: ${JSON.stringify(newHashes)}`);
 
   if (mode == "mark") {
     await mark(store, newHashes, storeKey);
